@@ -59,7 +59,7 @@ target_link_libraries(hw_grpc_proto
 
 # Targets (client|server)
 foreach(_target
-  client server)
+  async_client client server)
   add_executable(${_target} "${_target}.cc")
   target_link_libraries(${_target}
     hw_grpc_proto

@@ -18,9 +18,11 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 
 #ifdef BAZEL_BUILD
 #include "examples/protos/helloworld.grpc.pb.h"
@@ -45,9 +47,11 @@ class GreeterServiceImpl final : public Greeter::Service {
     if (++request_counter_ % request_modulo_ != 0) {
       // Return an OK status for every request_modulo_ number of requests,
       // return UNAVAILABLE otherwise.
+      std::this_thread::sleep_for(std::chrono::milliseconds{20});
       std::cout << "return UNAVAILABLE" << std::endl;
       return Status(StatusCode::UNAVAILABLE, "");
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds{5});
     std::string prefix("Hello ");
     reply->set_message(prefix + request->name());
     std::cout << "return OK" << std::endl;
