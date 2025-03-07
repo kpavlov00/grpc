@@ -140,9 +140,10 @@ RefCountedPtr<ServerRetryThrottleData> ServerRetryThrottleMap::GetDataForServer(
       throttle_data->max_milli_tokens() != max_milli_tokens ||
       throttle_data->milli_token_ratio() != milli_token_ratio) {
     // Entry not found, or found with old parameters.  Create a new one.
-    it = map_.insert_or_assign(server_name,
-                      MakeRefCounted<ServerRetryThrottleData>(
-                          max_milli_tokens, milli_token_ratio, throttle_data))
+    it = map_.insert_or_assign(
+                 server_name,
+                 MakeRefCounted<ServerRetryThrottleData>(
+                     max_milli_tokens, milli_token_ratio, throttle_data))
              .first;
     throttle_data = it->second.get();
   }
