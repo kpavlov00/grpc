@@ -18,9 +18,11 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "absl/flags/parse.h"
 #include "absl/log/initialize.h"
@@ -43,23 +45,10 @@ using helloworld::HelloRequest;
 // Logic and data behind the server's behavior.
 class GreeterServiceImpl final : public Greeter::Service {
  public:
-  Status SayHello(ServerContext* context, const HelloRequest* request,
-                  HelloReply* reply) override {
-    if (++request_counter_ % request_modulo_ != 0) {
-      // Return an OK status for every request_modulo_ number of requests,
-      // return UNAVAILABLE otherwise.
-      std::cout << "return UNAVAILABLE" << std::endl;
-      return Status(StatusCode::UNAVAILABLE, "");
-    }
-    std::string prefix("Hello ");
-    reply->set_message(prefix + request->name());
-    std::cout << "return OK" << std::endl;
+  Status SayHello(ServerContext* context, const HelloRequest* request, HelloReply* reply) override {
+    std::this_thread::sleep_for(std::chrono::seconds{20});
     return Status::OK;
   }
-
- private:
-  static constexpr int request_modulo_ = 4;
-  int request_counter_ = 0;
 };
 
 void RunServer(uint16_t port) {

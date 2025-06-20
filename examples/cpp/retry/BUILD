@@ -15,6 +15,19 @@
 licenses(["notice"])
 
 cc_binary(
+    name = "async_client",
+    srcs = ["async_client.cc"],
+    defines = ["BAZEL_BUILD"],
+    deps = [
+        "//:grpc++",
+        "//examples/protos:helloworld_cc_grpc",
+        "@com_google_absl//absl/flags:parse",
+        "@com_google_absl//absl/log:initialize",
+        "@com_google_absl//absl/strings:string_view",
+    ],
+)
+
+cc_binary(
     name = "client",
     srcs = ["client.cc"],
     defines = ["BAZEL_BUILD"],
